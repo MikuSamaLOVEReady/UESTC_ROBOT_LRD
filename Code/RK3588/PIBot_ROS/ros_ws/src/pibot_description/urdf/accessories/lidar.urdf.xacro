@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+
+<robot name="pibot" xmlns:xacro="https://ros.org/wiki/xacro">
+
+  <xacro:macro name="lidar" params="frame:=laser_link lidar_enabled:=true
+  lidar_joint_xyz:=0 lidar_joint_rpy:=0">
+
+      <xacro:if value="${lidar_enabled}">
+        <!-- RPLidar mount x position -->
+        <xacro:property name="lidar_joint_x" value="0.1995"/>
+        <!-- lidar link -->
+        <link name="${frame}">
+            <visual>
+                <origin xyz="0 0 -0.03" rpy="0 0 0.785398"/>
+                <geometry>
+                    <mesh filename="package://pibot_description/meshes/sensor/rplidar.dae"/>
+                </geometry>
+            </visual>
+            <collision>
+                <origin xyz="0 0 -0.03" rpy="0 0 0"/>
+                <geometry>
+                  <mesh filename="package://pibot_description/meshes/sensor/rplidar.dae"/>
+                </geometry>
+            </collision>
+            <inertial>
+                <origin xyz="0 0 ${0.025-0.03}" rpy="0 0 0"/>
+                <mass value="0.3"/>
+                <inertia ixx="0.00028" ixy="0.0" ixz="0.0" iyy="0.00028" iyz="0.0" izz="0.00022" />
+            </inertial>
+        </link>
+        <!-- lidar joint -->
+        <joint name="lidar_joint" type="fixed">
+            <origin xyz="${lidar_joint_xyz}" rpy="${lidar_joint_rpy}" />
+            <parent link="base_link" />
+            <child link="${frame}" />
+        </joint>
+      </xacro:if>
+  </xacro:macro>
+</robot>

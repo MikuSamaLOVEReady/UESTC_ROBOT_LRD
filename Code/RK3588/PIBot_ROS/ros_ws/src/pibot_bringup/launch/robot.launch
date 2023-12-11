@@ -1,0 +1,27 @@
+<launch>
+	<!-- <arg name="use_imu" default="false" doc="use imu in pibot base"/> -->
+	<arg name="use_imu" default="true" doc="use imu in pibot base"/>
+	<arg name="use_odom" default="true" doc="use odom in pibot base"/>
+
+	<!-- <arg name="lidar" default="$(env PIBOT_LIDAR)" doc="lidar type [rplidar, eai-x4, eai-g4]"/>
+	<arg name="3dsensor" default="$(env PIBOT_3DSENSOR)" doc="lidar type [xtion, astra, kinect]"/> -->
+
+	<!-- PIBOT DRIVER -->
+	<include if    ="$(arg use_imu)" file="$(find pibot_bringup)/launch/bringup_with_imu.launch">
+		<arg name="use_odom"              value="$(arg use_odom)"/> 
+	</include>
+
+	<include unless="$(arg use_imu)" file="$(find pibot_bringup)/launch/bringup.launch">
+		<arg name="publish_tf"              value="$(arg use_odom)"/> 
+	</include>
+
+	<!-- PIBOT MODEL -->
+	<include file="$(find pibot_bringup)/launch/model.launch"/>
+
+	<!-- 2D LIDAR(include fake lidar)-->
+  	<!-- <include unless="$(eval arg('lidar') == 'none')" file="$(find pibot_lidar)/launch/$(arg lidar).launch"/> -->
+
+	<!-- 3D SENSOR -->
+  	<!-- <include unless="$(eval arg('3dsensor') == 'none')" file="$(find pibot_3dsensor)/launch/$(arg 3dsensor).launch"/> -->
+  	<!-- <node pkg="web_video_server" type="web_video_server" name="web_video_server" unless="$(eval arg('3dsensor') == 'none')"/> -->
+</launch>

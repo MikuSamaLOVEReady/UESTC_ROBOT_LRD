@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<robot name="pibot" xmlns:xacro="https://ros.org/wiki/xacro">
+    <!-- board Macro -->
+    <xacro:macro name="pibot_board" params="board_prefix *joint_origin
+    length:=0.17 width:=0.08 height:=0.003 frame:=base_link">
+
+        <xacro:property name="board_pos" value="${height*0.5}" />
+
+        <!-- board Link -->
+        <link name="${board_prefix}_board">
+            <visual>
+                <origin xyz="0 0 ${board_pos}" rpy="0 0 0"/>
+                <geometry>
+                    <box size="${width} ${length} ${height}" />
+                </geometry>
+                <material name="red"/>
+            </visual>
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <box size="${width} ${length} ${height}" />
+                </geometry>
+            </collision>
+            <inertial>
+                <mass value="0.05" />
+                <origin xyz="0 0 0" rpy="0 0 0" />
+                <inertia  ixx="${board_ixx}" ixy="${board_ixy}" ixz="${board_ixz}" iyy="${board_iyy}" iyz="${board_iyz}" izz="${board_izz}" />
+            </inertial>
+        </link>
+
+        <!-- board Joint -->
+        <joint name="${board_prefix}_board_joint" type="continuous">
+            <parent link="${frame}"/>
+            <child link="${board_prefix}_board" />
+            <xacro:insert_block name="joint_origin" />
+            <axis xyz="0 1 0" />
+        </joint>
+    </xacro:macro>
+</robot>

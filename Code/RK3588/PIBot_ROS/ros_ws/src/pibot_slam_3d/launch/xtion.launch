@@ -1,0 +1,72 @@
+<launch>
+  <arg name="localization"    default="false" doc="Localization mode for navigation"/>
+  <arg name="database_path"   default="~/.ros/test_map.db"/>
+
+  <arg     if="$(arg localization)" name="rtabmap_args"  default=""/>
+  <arg unless="$(arg localization)" name="rtabmap_args"  default="--delete_db_on_start"/>
+
+  <group ns="camera">
+    <!-- Use RGBD synchronization -->
+    <node pkg="nodelet" type="nodelet" name="rgbd_sync" args="standalone rtabmap_ros/rgbd_sync" output="screen">
+      <param name="rate" type="double" value="5.0"/>
+
+      <remap from="rgb/image"           to="rgb/image_raw"/>
+      <remap from="depth/image"         to="depth/image"/>
+      <remap from="rgb/camera_info"     to="rgb/camera_info"/>
+
+      <remap from="rgbd_image"          to="rgbd_image"/>
+
+      <!-- Should be true for not synchronized camera topics 
+      (e.g., false for kinectv2, zed, realsense, true for xtion, kinect360)-->
+      <param name="approx_sync"         value="true"/> 
+    </node>  
+  </group>
+
+  <!-- RTAB=Map node -->
+  <group ns="rtabmap">
+    <node name="rtabmap" pkg="rtabmap_ros" type="rtabmap" output="screen" args="$(arg rtabmap_args)">
+      <param name="frame_id"            type="string" value="base_link"/>
+      <param name="database_path"       type="string" value="$(arg database_path)"/>
+      <param name="subscribe_depth"     type="bool"   value="false"/>
+      <param name="subscribe_scan"      type="bool"   value="false"/>
+      <param name="subscribe_rgb" 			type="bool" 	value="false"/>
+      <param name="subscribe_rgbd"      type="bool"   value="true"/>
+      <param name="subscribe_scan"      type="bool"   value="true"/>
+
+      <!-- Input topics -->
+      <remap from="scan"                to="/scan"/>
+      <remap from="odom"                to="/odom"/>
+      <remap from="rgbd_image"          to="/camera/rgbd_image"/>
+
+      <!-- Output topics -->
+      <remap from="grid_map" to="/map"/>
+
+      <param name="queue_size"          type="int"    value="10"/>
+
+      <!-- RTAB-Map's parameters -->
+      <param name="RGBD/ProximityPathMaxNeighbors" type="string" value="10"/>
+      <param name="RGBD/NeighborLinkRefining" type="string" value="true"/>
+      <param name="RGBD/ProximityBySpace"     type="string" value="true"/>
+      <param name="RGBD/AngularUpdate"        type="string" value="0.01"/>
+      <param name="RGBD/LinearUpdate"         type="string" value="0.01"/>
+      <param name="RGBD/OptimizeFromGraphEnd" type="string" value="false"/>
+      <param name="Grid/FromDepth"            type="string" value="false"/>
+
+      <param name="Optimizer/Slam2D"          type="string" value="true"/>
+      <param name="Reg/Force3DoF"             type="string" value="true"/>
+      <param name="Reg/Strategy"              type="string" value="1"/>
+
+      <!-- ICP parameters -->
+      <param name="Icp/VoxelSize"                 type="string" value="0.05"/>
+      <param name="Icp/MaxCorrespondenceDistance" type="string" value="0.1"/>
+
+      <!-- localization mode -->
+      <param     if="$(arg localization)" name="Mem/IncrementalMemory" type="string" value="false"/>
+      <param unless="$(arg localization)" name="Mem/IncrementalMemory" type="string" value="true"/>
+      
+      <!-- use actionlib to send goals to move_base --> 
+      <param name="use_action_for_goal" type="bool" value="true"/>
+      <remap from="move_base"            to="/move_base"/>
+    </node>
+  </group>
+</launch>

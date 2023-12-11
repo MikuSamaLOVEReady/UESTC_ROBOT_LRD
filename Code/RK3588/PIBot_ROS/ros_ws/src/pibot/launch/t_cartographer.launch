@@ -1,0 +1,23 @@
+<launch>
+  <arg name="ros_distro" default="$(env ROS_DISTRO)" doc="ros version"/>
+
+  <include file="$(find pibot_bringup)/launch/robot.launch">
+    <arg name="use_imu" value="true"/>
+  </include>
+
+  <!-- <include file="$(find pibot_navigation)/launch/include/move_base.launch.xml" /> -->
+
+  <node pkg="pibot" type="pibot_facade" name="pibot"  output="screen">
+    <param name="inner_mapping_func" value="false" />
+    <param name="inner_location_func" value="false" />
+
+    <param name="start_mapping_cmd" value="roslaunch pibot start_carto.launch" />
+    <param name="stop_mapping_cmd" value="roslaunch pibot stop_carto.launch" />
+    <param name="cancel_mapping_cmd" value="rosrun pibot killall_carto.sh" />
+
+    <param name="start_location_cmd" value="roslaunch pibot start_amcl.launch" />
+    <param name="cancel_location_cmd" value="rosnode kill amcl" />
+  </node>
+  
+  <include file="$(find laserscan_to_pointcloud)/launch/laserscan_to_pointcloud_shadow_filtered.launch" />
+</launch>

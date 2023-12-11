@@ -1,0 +1,19 @@
+<launch>
+  <arg name="localization"    default="false" doc="Localization mode for navigation"/>
+  <arg name="3dsensor"        default="$(env PIBOT_3DSENSOR)" doc="model type [xtion, astra, d435i]"/>
+  <arg name="use_imu"         default="false" doc="use imu in pibot"/>
+
+	<!-- PIBOT Base -->
+  <include file="$(find pibot_bringup)/launch/robot.launch">
+    <arg name="use_imu" value="$(arg use_imu)"/>
+  </include>
+  
+	<!-- Move Base -->
+  <include file="$(find pibot_navigation)/launch/include/move_base.launch.xml"/>
+  
+	<!-- rtabmap of 3dsensor -->
+  <include unless="$(eval arg('3dsensor') == 'none')" file="$(find pibot_slam_3d)/launch/$(arg 3dsensor).launch">
+	  <arg name="localization" value="$(arg localization)" />
+  </include>
+
+</launch>

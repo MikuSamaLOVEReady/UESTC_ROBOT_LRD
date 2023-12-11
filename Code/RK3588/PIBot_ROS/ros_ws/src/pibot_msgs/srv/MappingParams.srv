@@ -1,0 +1,5 @@
+string id
+Action action
+float32 resolution
+---
+int16 result

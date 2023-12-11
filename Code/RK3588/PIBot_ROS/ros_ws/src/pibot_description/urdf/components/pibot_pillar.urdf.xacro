@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<robot name="pibot" xmlns:xacro="https://ros.org/wiki/xacro">
+    <!-- pillar Macro -->
+    <xacro:macro name="pibot_pillar" params="pillar_prefix *joint_origin
+    height:=1.6 radius:=0.006 frame:=base_link">
+        
+        <xacro:property name="pillar_pos" value="${height*-0.5}" />
+
+        <!-- pillar Link -->
+        <link name="${pillar_prefix}_pillar">
+            <visual>
+                <origin xyz="0 0 ${pillar_pos}" rpy="0 0 0"/>
+                <geometry>
+                    <cylinder length="${height}" radius="${radius}"/>
+                </geometry>
+                <material name="red"/>
+            </visual>
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <cylinder length="${height}" radius="${radius}" />
+                </geometry>
+            </collision>
+            <inertial>
+                <mass value="0.05" />
+                <origin xyz="0 0 0" rpy="0 0 0" />
+                <inertia  ixx="${pillar_ixx}" ixy="${pillar_ixy}" ixz="${pillar_ixz}" iyy="${pillar_iyy}" iyz="${pillar_iyz}" izz="${pillar_izz}" />
+            </inertial>
+        </link>
+
+        <!-- pillar Joint -->
+        <joint name="${pillar_prefix}_pillar_joint" type="continuous">
+            <parent link="${frame}"/>
+            <child link="${pillar_prefix}_pillar" />
+            <xacro:insert_block name="joint_origin" />
+            <axis xyz="0 1 0" />
+        </joint>
+    </xacro:macro>
+</robot>

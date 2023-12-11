@@ -1,0 +1,18 @@
+<launch>
+  <include file="$(find freenect_launch)/launch/freenect.launch">
+    <arg name="rgb_frame_id"                value="camera_link" />
+    <arg name="depth_frame_id"              value="camera_link" />
+
+    <!-- use device registration -->
+    <arg name="depth_registration"              value="true" /> 
+  </include>
+
+  <!-- <include file="$(find openni_launch)/launch/openni.launch" >
+     <arg name="depth_registration" value="true" />
+  </include> -->
+
+  <!-- Run the image transport node -->
+  <node name="pub_compressed_image" pkg="image_transport" type="republish" args="raw in:=/camera/rgb/image_raw compressed out:=/usb_cam/image_compressed">
+    <remap from="/usb_cam/image_compressed/compressed" to="/compressed_image"/>
+  </node>
+</launch>

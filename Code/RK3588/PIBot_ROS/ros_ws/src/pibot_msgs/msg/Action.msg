@@ -1,0 +1,5 @@
+int16 ACTION_START = 0
+int16 ACTION_STOP = 1
+int16 ACTION_CANCEL = 2
+
+int16 type

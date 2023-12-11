@@ -1,0 +1,9 @@
+.vscode
+*.pyc
+ros_ws/build
+ros_ws/devel
+ros_ws/install
+ros_package/*
+!ros_package/*.tar.gz
+cartographer
+ros_ws/src/CMakeLists.txt

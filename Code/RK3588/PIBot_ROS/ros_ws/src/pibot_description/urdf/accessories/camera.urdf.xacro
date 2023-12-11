@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<robot name="pibot" xmlns:xacro="https://ros.org/wiki/xacro">
+    <xacro:include filename="$(find pibot_description)/urdf/components/pibot_pillar.urdf.xacro"/>
+    <xacro:include filename="$(find pibot_description)/urdf/components/pibot_board.urdf.xacro"/>
+
+    <xacro:macro name="camera" params="frame:=camera_link camera_enabled:=true
+    camera_joint_xyz:=0 camera_joint_rpy:=0">
+
+        <xacro:if value="${camera_enabled}">
+          <!-- Camera link -->
+          <link name="${frame}">
+              <visual>
+                  <origin xyz="0 0 -0.0125" rpy="0 0 0"/>
+                  <geometry>
+                      <mesh filename="package://pibot_description/meshes/sensor/xtion.dae"/>
+                  </geometry>
+              </visual>
+              <collision>
+                  <origin xyz="0 0 -0.0125" rpy="0 0 0"/>
+                  <geometry>
+                      <mesh filename="package://pibot_description/meshes/sensor/xtion.dae"/>
+                  </geometry>
+              </collision>
+              <inertial>
+                  <mass value="0.162"/>
+                  <origin xyz="-0.003 0 ${0.0125-0.0125}" rpy="0 0 0"/>
+                  <inertia ixx="0.00011" ixy="0.0" ixz="0.0" iyy="0.00005" iyz="0.0" izz="0.00011"/>
+              </inertial>
+          </link>
+          <!-- Camera joint -->
+          <joint name="base_to_camera" type="fixed">
+              <origin xyz="${camera_joint_xyz}" rpy="${camera_joint_rpy}" />
+              <parent link="base_link"/>
+              <child link="${frame}"/>
+          </joint>
+        </xacro:if>
+
+        <!-- pillar Pos -->
+        <xacro:if value="${camera_pillar_enabled}">
+            <xacro:property name="camera_board_length" value="0.10"/>
+            <xacro:property name="camera_board_width" value="0.08"/>
+
+            <xacro:pibot_board board_prefix="camera" length="${camera_board_length}" width="${camera_board_width}" frame="${frame}">
+                <origin xyz="-0.01 0 -0.035" rpy="0 0 0" />
+            </xacro:pibot_board>
+
+            <xacro:pibot_pillar pillar_prefix="camera_1" height="${camera_pillar_height}" frame="camera_board">
+                <origin xyz="-0.035 0.04 0" rpy="0 0 0" />
+            </xacro:pibot_pillar>
+            <xacro:pibot_pillar pillar_prefix="camera_2" height="${camera_pillar_height}" frame="camera_board">
+                <origin xyz="0.035 -0.04 0" rpy="0 0 0" />
+            </xacro:pibot_pillar>
+            <xacro:pibot_pillar pillar_prefix="camera_3" height="${camera_pillar_height}" frame="camera_board">
+                <origin xyz="0.035 0.04 0" rpy="0 0 0" />
+            </xacro:pibot_pillar>
+            <xacro:pibot_pillar pillar_prefix="camera_4" height="${camera_pillar_height}" frame="camera_board">
+                <origin xyz="-0.035 -0.04 0" rpy="0 0 0" />
+            </xacro:pibot_pillar>
+        </xacro:if>
+    </xacro:macro>
+</robot>

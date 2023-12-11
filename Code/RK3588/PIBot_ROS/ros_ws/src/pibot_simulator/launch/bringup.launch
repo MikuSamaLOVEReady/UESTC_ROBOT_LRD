@@ -1,0 +1,26 @@
+<launch>
+  <arg name="model" default="$(env PIBOT_MODEL)" doc="model type [apollo, zeus, hades, hera]"/>
+  <arg name="lidar" default="$(env PIBOT_LIDAR)" doc="model type [rplidar]"/>
+  <arg name="_3dsensor" default="$(env PIBOT_3DSENSOR)" doc="model type [xtion]"/>
+  <param name="/use_sim_time" value="false" />
+  
+  <arg name="urdf_file" default="$(find xacro)/xacro --inorder '$(find pibot_description)/urdf/pibot.xacro'" />
+
+  <param name="robot_description" command="$(arg urdf_file)
+  model:=$(arg model)
+  lidar:=$(arg lidar)
+  pb_3dsensor:=$(arg _3dsensor)" />
+
+  <node name="arbotix" pkg="arbotix_python" type="arbotix_driver" output="screen" clear_params="true">
+      <rosparam file="$(find pibot_simulator)/params/arbotix.yaml" command="load" />
+      <param name="sim" value="true"/>
+  </node>
+  
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher"  output="screen">
+    	<param name="rate" value="20.0"/>
+  </node>
+
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher">
+      <param name="publish_frequency" type="double" value="20.0" />
+  </node>
+</launch>

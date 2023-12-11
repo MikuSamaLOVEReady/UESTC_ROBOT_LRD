@@ -1,0 +1,10 @@
+int16 state
+Pose pose
+float32 vlinear_x
+float32 vlinear_y
+float32 vangular
+bool relocation_statu
+bool laser_statu
+bool odom_statu
+bool pose_statu
+bool pose_normal

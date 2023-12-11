@@ -1,0 +1,19 @@
+<launch>>
+
+  <arg name="use_imu" default="false" doc="use imu in pibot"/>
+
+  <include file="$(find pibot_bringup)/launch/robot.launch">
+      <arg name="use_imu" value="$(arg use_imu)"/>
+  </include>
+  
+  <param name="use_sim_time" value="false" />
+
+  <arg name="map_name" default="my_lab.yaml" />
+
+  <node name="map_server" pkg="map_server" type="map_server" args="$(find pibot_navigation)/maps/$(arg map_name)"/>
+
+  <include file="$(find pibot_navigation)/launch/include/rgbd_move_base.launch.xml" />
+
+  <include file="$(find pibot_navigation)/launch/include/rgbd_amcl.launch.xml" />
+  
+</launch>

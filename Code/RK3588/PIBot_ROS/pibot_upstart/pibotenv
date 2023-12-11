@@ -1,0 +1,22 @@
+#source ros
+source /opt/ros/kinetic/setup.bash
+
+if [ ! -z "$PIBOT_HOME" ]; then
+    PIBOT_HOME_DIR=$PIBOT_HOME
+else
+    PIBOT_HOME_DIR=/home/pibot/pibot_ros
+fi
+
+LOCAL_IP=192.168.12.1
+export ROS_IP=$LOCAL_IP
+export ROS_HOSTNAME=$LOCAL_IP
+export PIBOT_MODEL=hades
+export PIBOT_LIDAR=rplidar
+export PIBOT_3DSENSOR=none
+export PIBOT_BOARD=stm32f4
+export PIBOT_DRIVER_BAUDRATE=921600
+export ROS_MASTER_URI=http://$LOCAL_IP:11311
+
+#source pibot
+source $PIBOT_HOME_DIR/ros_ws/devel/setup.bash
+

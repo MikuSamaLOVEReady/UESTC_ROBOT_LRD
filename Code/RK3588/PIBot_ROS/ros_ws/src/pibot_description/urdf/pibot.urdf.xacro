@@ -1,0 +1,39 @@
+
+<robot name="pibot_robot" xmlns:xacro="https://ros.org/wiki/xacro">
+  <!-- xacro includes -->
+  <xacro:include filename="$(find pibot_description)/urdf/components/pibot_properties.xacro"/>
+
+  <xacro:arg name="model" default="apollo" />
+  <xacro:arg name="lidar" default="none" />
+  <xacro:arg name="pb_3dsensor" default="none" />
+
+  <xacro:macro name="pibot_robot">
+    <!-- Footprint -->
+    <link name="base_footprint"/>
+
+    <!-- Joint from base_footprint to base link(chassis) -->
+    <joint name="base_footprint_joint" type="fixed">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <parent link="base_link" />
+        <child link="base_footprint" />
+    </joint>
+
+    <!-- Base -->
+    <xacro:include filename="$(find pibot_description)/urdf/$(arg model).urdf.xacro"/>
+    <xacro:base></xacro:base>
+
+    <!-- LIDAR -->
+    <xacro:property name="pibot_lidar" value="$(arg lidar)"/>
+    <xacro:unless value="${pibot_lidar == 'none'}">
+      <xacro:include filename="$(find pibot_description)/urdf/accessories/lidar.urdf.xacro"/>
+      <xacro:lidar lidar_enabled="true" lidar_joint_xyz="${lidar_joint_xyz}" lidar_joint_rpy="${lidar_joint_rpy}"></xacro:lidar>
+    </xacro:unless>
+
+    <!-- Camera -->
+    <xacro:property name="pibot_3dsensor" value="$(arg pb_3dsensor)"/>
+    <xacro:unless value="${pibot_3dsensor == 'none'}">
+      <xacro:include filename="$(find pibot_description)/urdf/accessories/camera.urdf.xacro"/>
+      <xacro:camera camera_enabled="true" camera_joint_xyz="${camera_joint_xyz}" camera_joint_rpy="${camera_joint_rpy}"></xacro:camera>
+    </xacro:unless>
+  </xacro:macro>
+</robot>

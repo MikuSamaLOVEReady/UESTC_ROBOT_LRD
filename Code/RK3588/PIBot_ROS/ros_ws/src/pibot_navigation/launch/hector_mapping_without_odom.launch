@@ -1,0 +1,22 @@
+<launch>
+    <param name="use_sim_time" value="false" />
+
+    <arg name="use_imu" default="true" doc="use imu in pibot"/>
+
+    <include file="$(find pibot_bringup)/launch/robot.launch">
+        <arg name="use_imu" value="$(arg use_imu)"/>
+        <arg name="use_odom" value="false"/>
+    </include>
+
+
+    <include file="$(find pibot_navigation)/launch/include/hector_mapping_without_odom.launch.xml">
+        <arg if="$(arg use_imu)" name="base_frame" value="base_stabilized"/>
+        <arg if="$(arg use_imu)" name="odom_frame" value="base_stabilized"/>
+    </include>
+
+    <include if="$(arg use_imu)" file="$(find pibot_navigation)/launch/include/hector_imu_attitude_to_tf.launch.xml"/>
+
+    <include file="$(find pibot_navigation)/launch/include/geotiff_mapper.launch.xml">
+        <arg name="trajectory_source_frame_name" value="scanmatcher_frame"/>
+    </include>
+</launch>

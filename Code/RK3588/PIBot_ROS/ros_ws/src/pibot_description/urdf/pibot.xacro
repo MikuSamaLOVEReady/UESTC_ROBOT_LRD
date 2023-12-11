@@ -1,0 +1,7 @@
+
+<robot name="pibot_robot" xmlns:xacro="https://ros.org/wiki/xacro">
+
+  <xacro:include filename="$(find pibot_description)/urdf/pibot.urdf.xacro" />
+  <xacro:pibot_robot/>
+
+</robot>

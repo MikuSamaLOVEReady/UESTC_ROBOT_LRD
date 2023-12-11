@@ -1,0 +1,11 @@
+bool has_initial_trajectory_pose
+string pbstream_filename
+int32 to_trajectory_id
+float32 map_resolution
+geometry_msgs/Pose initial_pose
+---
+bool relocation_succeed
+geometry_msgs/Pose relocation_pose
+float32 score
+int32 trajectory_id
+

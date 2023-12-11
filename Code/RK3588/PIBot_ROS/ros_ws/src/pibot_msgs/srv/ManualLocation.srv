@@ -1,0 +1,4 @@
+geometry_msgs/Pose pose
+string filename
+---
+int16 result
