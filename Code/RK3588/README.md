@@ -71,7 +71,7 @@ roslaunch pibot_navigation nav.launch
 
 ​		根据导航需求更改导航地图，地图路径在下图左下角位置`pgm`为地图格式 `yaml`为配置文件:
 
-![Untitled](.\Image\ROS_Using (3).png)
+<img src=".\Image\ROS_Using (3).png" alt="Untitled" style="zoom:80%;" />
 
 #### 3.3 小车控制和可视化
 
