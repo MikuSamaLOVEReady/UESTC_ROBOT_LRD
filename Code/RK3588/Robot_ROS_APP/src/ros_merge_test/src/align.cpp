@@ -1,11 +1,20 @@
+/******************** (C) COPYRIGHT 2023 UPBot **********************************
+* File Name          : align.cpp
+* Current Version    : V1.0
+* Date of Issued     : 2023.12.13 zhanli@review
+* Comments           : 传感器数据对齐
+********************************************************************************/
 #include "align.h"
 
 namespace uwb_slam{
+
     void Align::Run()
     {
         tmp = ros::Time::now();
         ros::Time tmp1 = ros::Time::now();
         ros::Time tmp2 = ros::Time::now();
+
+
         wheel_odom_sub_= nh_.subscribe("wheel_odom",10,&Align::wheel_odomCB,this);
         imu_sub_= nh_.subscribe("raw_imu",10,&Align::imuCB,this);
         odom_sub_= nh_.subscribe("odom",10,&Align::odomCB,this);
@@ -120,12 +129,20 @@ namespace uwb_slam{
         return;
     }
 
+    /**---------------------------------------------------------------------
+    * Function    : odomCB
+    * Description : 里程计的回调函数, 定期会被ROS调用传参，这个函数不能做过于耗时
+    *               的操作
+    * Input       : nav_msgs::Odometry& odom : 里程计输入结构体
+    * Date        : 2023/12/13 zhanli@review
+    *---------------------------------------------------------------------**/
     void Align::odomCB(const nav_msgs::Odometry& odom)
     {
         odom_tmp_ = odom.header.stamp;
         imu_odom_.pose_[0] = odom.pose.pose.position.x;
         imu_odom_.pose_[1] = odom.pose.pose.position.y;
         imu_odom_.pose_[2] = odom.pose.pose.position.z;
+        
         imu_odom_.quat_[0] = odom.pose.pose.orientation.x;
         imu_odom_.quat_[1] = odom.pose.pose.orientation.y;
         imu_odom_.quat_[2] = odom.pose.pose.orientation.z;

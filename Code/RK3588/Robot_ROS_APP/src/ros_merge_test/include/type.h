@@ -18,13 +18,14 @@ struct Imu_data
 
 struct Imu_odom_pose_data
 {
-    Imu_data imu_data_;
-    double pose_[3];
-    double quat_[4];
+    Imu_data imu_data_;                                   
+    double pose_[3];                                       /* 位置信息 */
+    double quat_[4];                                       /* 姿态信息(四元数) */
     double vxy_;
     double angle_v_;
     Imu_odom_pose_data(){};
-    Imu_odom_pose_data( Imu_data imu_data,double x,double y,double z, double qw, double qx, double qy, double qz,double vxy, double angle_v):imu_data_(imu_data),pose_{x,y,z},quat_{qw,qx,qy,qz},vxy_(vxy),angle_v_(angle_v){};
+    Imu_odom_pose_data( Imu_data imu_data,double x,double y,double z, double qw, double qx, 
+    double qy, double qz,double vxy, double angle_v):imu_data_(imu_data),pose_{x,y,z},quat_{qw,qx,qy,qz},vxy_(vxy),angle_v_(angle_v){};
 };
 
 /*struct Odom_data
@@ -43,7 +44,7 @@ struct Imu_odom_pose_data
 };
 */
 
-struct  Uwb_data
+struct Uwb_data
 {
     float x_,y_;
     ros::Time uwb_t_;

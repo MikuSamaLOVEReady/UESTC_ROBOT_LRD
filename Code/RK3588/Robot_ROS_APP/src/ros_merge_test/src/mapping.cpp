@@ -1,6 +1,6 @@
 #include "mapping.h"
 #include <mutex>
-#include <unistd.h>// 包含 usleep() 函数所在的头文件
+#include <unistd.h>
 #include <opencv2/core.hpp>
 #include <opencv2/highgui.hpp>
 
@@ -16,9 +16,7 @@ namespace uwb_slam
     {
         //std::unique_lock<std::mutex> lock(mMutexMap);
         mv_uwb_point_.push(data);
-
     }
-    
 
     void Mapping::process()
     {
@@ -72,23 +70,26 @@ namespace uwb_slam
             cv::destroyAllWindows();
          }
         */
-        while(1){
+        while(1)
+        {
+            // 这个地方会持续阻塞
             int key = cv::waitKey(0);
-            if (key == 'q' ) {
+            if (key == 'q') {
                 read_uwb_ = true;
                 std::cout << "non" << key << std::endl;
                 //cv::destroyAllWindows();
             }
-            while( read_uwb_ )//按下空格键
+
+            while(read_uwb_ ) // 按下空格键
             {
                 int key2 = cv::waitKey(1);
                 if (key2 == 'q' ) {
                     //TODO: save
-                //   std::cout << << std::endl;
-                  std::string pngimage="/home/firefly/Project_Ros/src/ros_merge_test/Map/output_image.png";//保存的图片文件路径
-        	      cv::imwrite(pngimage,img);
-                  read_uwb_ = false;
-                  break;
+
+                    std::string pngimage = "/home/firefly/Project_Ros/src/ros_merge_test/Map/output_image.png";//保存的图片文件路径
+                    cv::imwrite(pngimage, img);
+                    read_uwb_ = false;
+                    break;
                 }
         
                 this->feed_uwb_data(cv::Point2d(uwb_->x ,uwb_->y));
@@ -102,15 +103,10 @@ namespace uwb_slam
                     //std::cout << " start process" << std::endl;
                     process();
                     //std::cout << " end process" << std::endl;
-                     
                 }
             }
             // std::cout << "out" << key << std::endl;
-
         }
-
-
-
         //std::string pngimage="../Map/pngimage.png";//保存的图片文件路径
         //cv::imwrite(pngimage,img);
       

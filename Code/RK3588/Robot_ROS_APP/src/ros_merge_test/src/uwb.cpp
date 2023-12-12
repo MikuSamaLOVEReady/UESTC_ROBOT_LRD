@@ -1,3 +1,9 @@
+/******************** (C) COPYRIGHT 2023 UPBot **********************************
+* File Name          : uwb.cpp
+* Current Version    : V1.0
+* Date of Issued     : 2023.12.13 zhanli@review
+* Comments           : UWB数据驱动, 负责从串口读取USB并发布出去
+********************************************************************************/
 #include "uwb.h"
 #include <cmath>
 
@@ -7,38 +13,29 @@ namespace uwb_slam{
 
     //
     Uwb::Uwb(){
-            //int pre_seq = -1;
     }
 
     void Uwb::Run() {
-        
         while(1){
-        this->Serread();
-           // std::cout<<"s"<<std::endl;
-           // std::cout<<this->x<<std::endl;
-        /*if(t_tmp!=imu_odom_.imu_data_.imu_t_){
-            imu_odom_queue_.push(imu_odom_);
-            t_tmp=imu_odom_.imu_data_.imu_t_;
-        }*/
+            // 这个地方不控制速率?
+            this->UartUSBRead();
         }
-
-
     }
 
 
-    void Uwb::Serread()
+    void Uwb::UartUSBRead()
     {
         try {
             boost::asio::io_service io;
             boost::asio::serial_port serial(io, "/dev/ttyUSB0"); // 替换成你的串口设备路径
 
-            serial.set_option(boost::asio::serial_port_base::baud_rate(115200)); // 设置波特率
-            serial.set_option(boost::asio::serial_port_base::character_size(8)); // 设置数据位
-            serial.set_option(boost::asio::serial_port_base::parity(boost::asio::serial_port_base::parity::none)); // 设置校验位
-            serial.set_option(boost::asio::serial_port_base::stop_bits(boost::asio::serial_port_base::stop_bits::one)); // 设置停止位
+            serial.set_option(boost::asio::serial_port_base::baud_rate(115200));                                         // 设置波特率
+            serial.set_option(boost::asio::serial_port_base::character_size(8));                                         // 设置数据位
+            serial.set_option(boost::asio::serial_port_base::parity(boost::asio::serial_port_base::parity::none));       // 设置校验位
+            serial.set_option(boost::asio::serial_port_base::stop_bits(boost::asio::serial_port_base::stop_bits::one));  // 设置停止位
 
             uint8_t tmpdata[12];
-            // std::cerr << "befor read" << std::endl;
+            
             size_t bytesRead = boost::asio::read(serial, boost::asio::buffer(tmpdata, 12)); // 读取串口数据
             // std::cerr << "after read" << std::endl;
 
@@ -66,51 +63,16 @@ namespace uwb_slam{
             // pre_seq = static_cast<int>(tmpdata[3]);
 
             std::cout << "theta: " << theta << " distance: " << distance << std::endl;
-            //std::cout std::endl;
+            
         } catch (const std::exception& ex) {
-            std::cerr << "Exception: " << ex.what() << std::endl;
+            std::cerr << "[ERR]: uwb.cpp::Uart USB read data exception: " 
+                << ex.what() << std::endl;
         }
     }
     
- 
     void fusion()
     {
-
     }
-
-    
-
-
 };
 
-// bool Uwb::checknewdata()
-// {
-//     std::unique_lock<std::mutex> lock(mMutexUwb);
-//     return !v_buffer_imu_odom_pose_data_.empty();
-// }
-
-// void Uwb::Run() {
-//     while(1)
-//     {
-//         if(checknewdata())
-//         {
-//             {
-//                 std::unique_lock<std::mutex> lock(mMutexUwb);
-//                 Imu_odom_pose_data imu_odom_pose_data = v_buffer_imu_odom_pose_data_.front();
-//                 v_buffer_imu_odom_pose_data_.pop();
-//             }
-
-
-
-//         }
-//     }
-
-
-
-// }
-
-// void Uwb::feed_imu_odom_pose_data(const Imu_odom_pose_data& imu_odom_pose_data){
-//     std::unique_lock<std::mutex> lock(mMutexUwb);
-//     v_buffer_imu_odom_pose_data_.push(imu_odom_pose_data);
-// }
 

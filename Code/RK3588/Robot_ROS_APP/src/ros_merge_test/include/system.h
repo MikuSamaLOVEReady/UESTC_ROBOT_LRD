@@ -18,10 +18,10 @@ namespace uwb_slam{
         void Run();
     public:
        
-        std::shared_ptr<uwb_slam::Mapping>Mapping_;
-        std::shared_ptr<uwb_slam::Uwb>Uwb_;
-        std::shared_ptr<uwb_slam::Senddata>Sender_;
-        std::shared_ptr<uwb_slam::Align>Align_;
+        std::shared_ptr<uwb_slam::Mapping> Mapping_;
+        std::shared_ptr<uwb_slam::Uwb> Uwb_;
+        std::shared_ptr<uwb_slam::Senddata> Sender_;
+        std::shared_ptr<uwb_slam::Align> Align_;
 
         // Uwb* Uwb_ ;
         // Senddata* Sender_;

@@ -15,10 +15,10 @@
 namespace uwb_slam{
     typedef boost::shared_ptr<nav_msgs::Odometry const> OdomConstPtr;
     typedef boost::shared_ptr<sensor_msgs::Imu const> ImuConstPtr;
-    class Read_sensor_data
+    class ReadSensorData
     {
         public:
-        Read_sensor_data();
+        ReadSensorData();
 
         void Run(int argc, char* argv[]);
         //void set_uwb(Uwb * uwb);

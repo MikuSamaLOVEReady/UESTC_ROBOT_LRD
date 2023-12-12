@@ -26,6 +26,7 @@ namespace uwb_slam{
         ros::Subscriber wheel_odom_sub_;
         ros::Subscriber imu_sub_;
         ros::Subscriber odom_sub_;
+
         Imu_odom_pose_data imu_odom_;
         Uwb_data uwb_data_;
         ros::Time tmp ;
@@ -35,7 +36,6 @@ namespace uwb_slam{
         cv::Mat img1;
         std::queue<std::pair<Imu_odom_pose_data,Uwb_data>> data_queue;
         std::shared_ptr<uwb_slam::Uwb> uwb_;
-
     };
 };
 #endif
