@@ -56,7 +56,7 @@ sudo apt-get install coinor-*
 
 #### 3.1 导航的启动
 
-​		`PIBot_ROS`的文件解压或重新命名可以按照个人习惯即可，这里以解压后命名为`pibot_ros`为例，介绍命令启动导航
+​		`PIBot_ROS`的文件解压或重新命名可以按照个人习惯即可，这里以解压后命名为`pibot_ros`为例，介绍命令启动导航。
 
 ```shell
 # 进入到pibot_ros的工作空间
@@ -64,6 +64,7 @@ cd ~/pibot_ros/ros_ws
 # 配置环境变量
 source ./devel/setup.bash
 # 启动导航文件
+# 格式 roslaunch package_name launch_file_name
 roslaunch pibot_navigation nav.launch
 ```
 

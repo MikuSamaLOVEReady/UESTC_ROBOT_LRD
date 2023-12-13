@@ -22,28 +22,24 @@ find_package(Boost REQUIRED)
 # CATKIN_DEPENDS message_runtime std_msgs geometry_msgs
 # )
 
-
 include_directories(
 # include
- ${OpenCV_INCLUDE_DIRS}
-  ${catkin_INCLUDE_DIRS}
+${OpenCV_INCLUDE_DIRS}
+${catkin_INCLUDE_DIRS}
         include
 )
 
 add_library(${PROJECT_NAME} SHARED
-        src/system.cpp
         src/uwb.cpp
         src/mapping.cpp
         src/align.cpp
-        # src/read_sensor_data.cpp
         include/senddata.h src/senddata.cpp)
 
 
 add_message_files(
     DIRECTORY msg
     FILES
-        RawImu.msg
-     
+    RawImu.msg
 )
 generate_messages(DEPENDENCIES std_msgs geometry_msgs)
 

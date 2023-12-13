@@ -6,7 +6,6 @@
 #ifndef MAPPING_H
 #define MAPPING_H
 
-
 namespace uwb_slam{
     class Mapping
     {
@@ -26,9 +25,7 @@ namespace uwb_slam{
         bool read_uwb_ = false;
         cv::Mat img;
         cv::Point2d cur_point = {-1,-1};
-
     };
-
 }
 
 #endif

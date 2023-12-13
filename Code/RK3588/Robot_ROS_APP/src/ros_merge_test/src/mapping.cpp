@@ -40,10 +40,7 @@ namespace uwb_slam
 
     void Mapping::Run()
     {
-        
-        //int key = cv::waitKey(0);//等待用户按下按键
-        //std::cout << key << std::endl;
-        int realWidth = AREA_SIZE / PIXEL_SCALE;
+        int realWidth  = AREA_SIZE / PIXEL_SCALE;
         int realHeight = AREA_SIZE / PIXEL_SCALE;
 
         img = cv::Mat(realHeight, realWidth, CV_8UC1, cv::Scalar(255,255,255));
@@ -56,20 +53,8 @@ namespace uwb_slam
             for (int i=199+8;i<210;i+=1)
                 img.at<unsigned char>(j,i)= 0;
 
-
-
         cv::imshow("Image",img);
 
-        /*
-        std::cout << "waiting" <<std::endl;
-        int key = cv::waitKey(0);
-        if (key == 'q' || key == 27) {
-            this->feed_uwb_data(cv::Point2d(uwb_->x,uwb_->y));
-            read_uwb_ = true;
-            std::cout << "non" << key << std::endl;
-            cv::destroyAllWindows();
-         }
-        */
         while(1)
         {
             // 这个地方会持续阻塞
@@ -94,23 +79,11 @@ namespace uwb_slam
         
                 this->feed_uwb_data(cv::Point2d(uwb_->x ,uwb_->y));
           
-
-                //uwb xieru
-                //std::cout << "cur_SEQ: " <<uwb_->cur_seq  << std::endl;
-
-                if(check_uwb_point())
-                {
-                    //std::cout << " start process" << std::endl;
+                if(check_uwb_point()){
                     process();
-                    //std::cout << " end process" << std::endl;
                 }
             }
-            // std::cout << "out" << key << std::endl;
         }
-        //std::string pngimage="../Map/pngimage.png";//保存的图片文件路径
-        //cv::imwrite(pngimage,img);
-      
-        /*ros 发送图片给导航 */
     }
 } // namespace uwb_slam
 
