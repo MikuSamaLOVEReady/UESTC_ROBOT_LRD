@@ -8,3 +8,5 @@
 其他资料：
 
 PIBot官方资料：https://gitee.com/pibot/pibot_bringup/blob/master/doc/README.md#1-%E8%AF%B4%E6%98%8E
+
+> 注意：`build`文件夹是编译生成，不需要纳入git管理

@@ -1,0 +1,13 @@
+[Unit]
+Description=Create AP Service
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/lnxrouter -n --ap wlan0 SSID -p pibot_ap --no-virt -g 12
+KillSignal=SIGINT
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
