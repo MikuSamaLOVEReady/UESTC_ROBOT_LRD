@@ -30,8 +30,8 @@ private:
     rknn_input_output_num io_num;
     
     int channel = 3;
-    int width = 0;
-    int height = 0;
+    int width   = 0;
+    int height  = 0;
 
     rknn_input inputs[1];
     

@@ -39,7 +39,6 @@ void *ranging(void *args)		// ranging线程
 
 int main(int argc, char **argv)
 {
-
 	pthread_t tids[1];		// 执行ranging线程
 	int ret = pthread_create(&tids[0], NULL, ranging, NULL);
 
