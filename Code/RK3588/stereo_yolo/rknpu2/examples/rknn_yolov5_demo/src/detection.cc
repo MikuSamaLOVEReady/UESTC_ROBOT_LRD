@@ -1,6 +1,12 @@
+/******************** (C) COPYRIGHT 2024 UPBot **********************************
+* File Name          : detection.cpp
+* Current Version    : V1.0
+* Author             : Rockchip & linyuehang
+* Date of Issued     : 2024.01.07 zhanli@review
+* Comments           : 目标检测类，负责调用瑞芯微芯片NPU进行目标检测推理
+********************************************************************************/
 #include "detection.h"
 #include <opencv2/opencv.hpp>
-
 
 unsigned char * Detection::load_data(FILE *fp, size_t ofst, size_t sz)
 {
@@ -130,7 +136,7 @@ Detection::Detection()
     inputs[0].index = 0;
     inputs[0].type = RKNN_TENSOR_UINT8;
     inputs[0].size = width * height * channel;
-    inputs[0].fmt = RKNN_TENSOR_NHWC;
+    inputs[0].fmt  = RKNN_TENSOR_NHWC;
     inputs[0].pass_through = 0;
     
 }

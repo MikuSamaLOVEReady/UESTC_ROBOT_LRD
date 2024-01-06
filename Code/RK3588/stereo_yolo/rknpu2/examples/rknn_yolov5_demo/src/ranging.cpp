@@ -1,3 +1,10 @@
+/******************** (C) COPYRIGHT 2024 UPBot **********************************
+* File Name          : ranging.cpp
+* Current Version    : V1.0
+* Author             : Rockchip & linyuehang
+* Date of Issued     : 2024.01.07 zhanli@review
+* Comments           : 双目摄像头目标测距算法，需要依赖OpenCV以及目标检测模块
+********************************************************************************/
 #include <iostream>
 #include <stdio.h>
 #include "ranging.h"
@@ -297,8 +304,9 @@ Ranging::Ranging(int index, int imgw, int imgh) : //初始化
     auto imgSize = Size(imgw, imgh);
     Mat r1(3, 3, CV_64F), r2(3, 3, CV_64F), p1(3, 4, CV_64F), p2(3, 4, CV_64F);
 
+    // 立体校正
     stereoRectify(cam_matrix_left.t(), distortion_l, cam_matrix_right.t(), distortion_r,
-                    imgSize, rotate.t(), trans, r1, r2, p1, p2, q);//立体校正
+                    imgSize, rotate.t(), trans, r1, r2, p1, p2, q);
 
     // 计算无畸变和修正转换映射
     initUndistortRectifyMap(cam_matrix_left.t(), distortion_l, r1, p1, imgSize, CV_32F, mapX1, mapX2); 
@@ -309,8 +317,13 @@ Ranging::Ranging(int index, int imgw, int imgh) : //初始化
 	std::cout<< " ******************* CAMERA  initialization ********************" << std::endl;
 }
 
-
-std::vector<Mat> Ranging::get_range() 
+/**---------------------------------------------------------------------
+* Function    : detObjectRanging
+* Description : 摄像头帧读取、目标检测以及目标测距任务
+* Author      : hongchuyuan
+* Date        : 2023/12/13 zhanli@review 719901725@qq.com
+*---------------------------------------------------------------------**/
+std::vector<Mat> Ranging::detObjectRanging() 
 {
     
 	double rang_old, rang_now;
@@ -378,7 +391,7 @@ std::vector<Mat> Ranging::get_range()
             // }
         }
 
-        // 存储测距信息，存储格式：距离d，宽w，高h，角度α
+        // 存储测距信息，存储格式：距离d，宽w，高h，角度alpha
         Mat info(detect_result_group.count, 4, CV_32F); 
         
         // 如果有检测目标
@@ -386,7 +399,7 @@ std::vector<Mat> Ranging::get_range()
         {
             // getInfo()修改为calObjectRanging()
             // 在这里测量目标的距离并存储到info中
-            // 优化: 这个地方重复的将左右视图转换为灰度图，浪费CPU的算力
+            // 优化:这个地方重复的将左右视图转换为灰度图，浪费CPU的算力
             getInfo(lframe, rframe, detBoxes, info);
 
             //show stereo distance

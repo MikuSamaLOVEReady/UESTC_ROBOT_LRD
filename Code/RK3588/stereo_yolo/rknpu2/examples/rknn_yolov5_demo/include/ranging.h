@@ -51,6 +51,6 @@ public:
     void getInfo(cv::Mat &imgl, cv::Mat &imgr, cv::Mat &detBoxes, cv::Mat &info);
     std::vector<float> pic2cam(int u, int v);
     std::vector<int> muban(cv::Mat &left_image, cv::Mat &right_image, const int *coordinates);
-    std::vector<cv::Mat> get_range();
+    std::vector<cv::Mat> detObjectRanging();
     void horizon_estimate(cv::Mat& img, cv::Mat& bboxs,int k);
 };
