@@ -1,35 +1,38 @@
-# 3566配置pibot_ros
+# RK-3566配置pibot_ros
 
-# 需要安装的库
+### 一、需要安装的库
 
-将3588上`pibot_ros/ros_ws`文件夹复制后删去 `devel` 和 `build` 目录编译前先安装
+​		将RK3588上`pibot_ros/ros_ws`文件夹复制后删去 `devel` 和 `build` 目录编译前先安装
 
-全覆盖需要的库如下：
+### 全覆盖需要的库如下：
 
-```cpp
-
+```shell
 sudo apt install ros-noetic-opengm
-
 sudo apt install ros-noetic-libdlib
-
 sudo apt install ros-noetic-cob-map-accessibility-analysis
-
 sudo apt-get install coinor-*
 ```
 
-安装完成后在`ros_ws`目录下catkin_make,编译成功后即可运行。
+​		安装完成后在`ros_ws`目录下catkin_make,编译成功后即可运行。
 
-运行：
+```shell
+# 启动服务端
+roslaunch ipa_room_exploration room_exploration_action_server.launch
+# 启动客户端：
+roslaunch ipa_room_exploration room_exploration_client.launch
+```
 
-1. 启动服务端：`roslaunch ipa_room_exploration room_exploration_action_server.launch`
-2. 启动客户端：`roslaunch ipa_room_exploration room_exploration_client.launch`
 
-# 遇到的问题
 
-1. 连接不上主板 `ls /dev/pibot :No such file` 
-- 3566不支持`ch340`串口模块，推荐使用`CH343、FT232、CP2102` 串口模块
+### 二、遇到的问题
+
+#### 2.1 连接不上主板 `ls /dev/pibot :No such file` 
+
+- RK3566不支持`CH340`串口模块，推荐使用`CH343、FT232、CP2102` 串口模块
 - 改完串口模块后仍然找不到`/dev/pibot`:需要将`ttyUSB0`软链接到`/pibot`上`sudo ln -s /dev/ttyUSB0 /dev/pibot`
-1. 不能键盘控制小车
+
+#### 2.2 不能键盘控制小车
+
 - 安装键盘控制包：`sudo apt-get install ros-noetic-teleop-twist-keyboard`
 - 安装python ：`sudo apt install -y python3`
 1. **`/usr/bin/env`: ‘python’: No such file or directory**
