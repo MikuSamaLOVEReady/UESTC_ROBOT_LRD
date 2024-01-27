@@ -1,0 +1,66 @@
+# ROS环境安装
+
+更新时间：2024-01-27
+
+> - 硬件：Firefly-ROC-RK3588S-PC
+> - 系统固件：ROC-RK3588S-PC_Ubuntu20.04-Gnome-r30028_v1.1.1b_230914.7z
+>   - 系统固件下载百度云链接：https://pan.baidu.com/s/1NW9SuyuZSmhWSPJJVCrKBg 提取码：k5r3 
+>   - 团队私有网盘：http://loghzan.ticp.io:52440 账号：uestc 密码：123
+> - 验证方法：刷机后新安装
+> - 验证人: 李瑞瑞、詹力 2024-01-27
+
+### 1. 添加ROS软件源：将以下命令复制到ubuntu的终端执行
+
+```sh
+# 换中国技术大学源，可以全部都换，这个只换ros
+sudo sh -c '. /etc/lsb-release && echo "deb <http://mirrors.ustc.edu.cn/ros/ubuntu/> $DISTRIB_CODENAME main" > /etc/apt/sources.list.d/ros-latest.list'
+```
+
+### 2. 添加ROS软件源
+
+```
+sudo apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654` (这一步建议看下面链接) `
+```
+
+### 3. 开始安装ROS
+
+```shell
+# 更新apt, 如果不更新可能会导致无法定位软件包的问题
+sudo apt update
+sudo apt install ros-noetic-desktop-full
+sudo apt-get install python3-pip
+sudo pip3 install 6-rosdep
+sudo 6-rosdep
+sudo rosdep init
+rosdep update
+```
+
+### 4. 设置环境变量
+
+```shell
+echo "source /opt/ros/noetic/setup.bash" >> ~/.bashrc
+source ~/.bashrc
+```
+
+### 5. 安装rosinstall
+
+```shell
+sudo apt install python3-rosinstall python3-rosinstall-generator python3-wstool
+```
+
+### 6. 安装检查
+
+​		经过实验，下面两个库在前面的步骤已经安装完成，下面步骤主要是检查所需要的库是否安装全。
+
+```shell
+sudo apt install ros-noetic-desktop-full
+# 安装libgtk主要是用于支持图像显示
+sudo apt-get install libgtk2.0-dev
+# apt-get无法安装时可以采用aptitude安装,
+# 如果没有安装aptitude
+sudo apt-get install aptitude
+sudo aptitude install libgtk2.0-dev
+```
+
+
+
