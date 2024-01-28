@@ -1,0 +1,6 @@
+<launch>
+ <node pkg="ipa_room_exploration" type="talkerUltraSound" name="talkerUltraSound" required="true"/>
+ <node pkg="ipa_room_exploration" type="static_transform_publisher" name="base_footprint_to_sonic"
+   args="0.0 0.0 0.0 0.0 0.0 0.0 /base_footprint /ultrasound 20">
+</node>
+</launch>
