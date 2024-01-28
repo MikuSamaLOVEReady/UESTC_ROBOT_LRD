@@ -1,0 +1,22 @@
+obstacle_range: 3.0
+raytrace_range: 3.5
+
+footprint: [[-0.205, -0.155], [-0.205, 0.155], [0.077, 0.155], [0.077, -0.155]]
+#robot_radius: 0.17
+
+inflation_radius: 0.3
+cost_scaling_factor: 5.0
+
+map_type: costmap
+observation_sources: scan
+scan: {sensor_frame: base_scan, data_type: LaserScan, topic: scan, marking: true, clearing: true}
+sonar_layer:
+ enabled: true 
+ no_readings_timout: 0.0 #此参数如果为0 ，没有任何影响.否则，如果在这个时间段内没有收到任何声纳数据，超声波层会警告用户，并且此层不被使用
+ clear_threshold: 0.8    #栅格概率比该值低的标记为free
+ mark_threshold: 0.9     #栅格概率大于该值标定为占据
+#  topics: ["/robot0/sonar_0","/robot0/sonar_1","/robot0/sonar_2","/robot0/sonar_3"] #超声波话题
+ clear_on_max_reading: true #是否将超出sonar最大距离清除
+
+# observation_sources: scan
+# scan: {sensor_frame: base_scan, data_type: LaserScan, topic: sonar, marking: true, clearing: true}

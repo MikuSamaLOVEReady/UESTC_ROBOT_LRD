@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<launch>
+
+	<arg name="env_pack" default="$(find ipa_room_exploration)" />
+	<!-- <arg name="robot_env" value="waffle" doc="model type [burger, waffle, waffle_pi]"/> -->
+	<arg name="robot_env" default="$(env PIBOT_MODEL)" doc="model type [apollo, zeus, hades, hera]"/>
+ 	<arg name="urdf_file" default="$(find xacro)/xacro --inorder '$(find pibot_description)/urdf/pibot.xacro'" />
+	<!-- <arg name="robot_env" value="burger" doc="model type [burger, waffle, waffle_pi]"/> -->
+    <!-- <arg name="configuration_basename" default="turtlebot3_lds_2d.lua"/> -->
+	<arg name="robot_radius" default="0.1"/>
+	<arg name="coverage_radius" default="0.1"/>
+	<arg name="use_test_maps" default="true"/>
+
+	<!--  -->
+	<node ns="room_exploration" pkg="ipa_room_exploration" type="room_exploration_client" name="room_exploration_client" output="screen">
+		<rosparam file="$(find pibot_navigation)/maps/160.yaml" command="load" />
+		<param name="env_pack" value="$(arg env_pack)"/>
+		<param name="robot_env" value="$(arg robot_env)"/>
+		<param name="robot_radius" value="$(arg robot_radius)"/>
+		<param name="coverage_radius" value="$(arg coverage_radius)"/>
+		<param name="use_test_maps" value="$(arg use_test_maps)"/>
+	</node>
+	<!-- <node pkg="ipa_room_exploration" type="talkerUltraSound" name="talkerUltraSound" required="true"/> -->
+
+	<!-- <include file="$(find ipa_room_exploration)/ros/launch/clean_work.launch"/> -->
+	<include file="$(find pibot_navigation)/launch/nav.launch"/>
+
+</launch>
