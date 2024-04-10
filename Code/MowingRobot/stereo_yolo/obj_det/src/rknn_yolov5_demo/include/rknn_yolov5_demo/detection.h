@@ -24,7 +24,7 @@ private:
     int img_channel = 0;
     const float nms_threshold = NMS_THRESH;      // 默认的NMS阈值
     const float box_conf_threshold = BOX_THRESH; // 默认的置信度阈值
-    char* model_name = "/home/firefly/obj_dec/src/rknn_yolov5_demo/model/RK3588/yolov5s-640-640.rknn";
+    const char* model_name = "./src/rknn_yolov5_demo/model/RK3588/yolov5s-640-640.rknn";
 
     cv::Mat orig_img;
     rknn_input_output_num io_num;
@@ -42,7 +42,7 @@ public:
     Detection();
     static unsigned char *load_data(FILE *fp, size_t ofst, size_t sz);
     static unsigned char *load_model(const char *filename, int *model_size);
-    detect_result_group_t outputParse(cv::Mat netInputImg);
+    detect_result_group_t outputParse(cv::Mat& netInputImg);
 
 
 };

@@ -22,7 +22,7 @@
 #include <sys/time.h>
 #include <set>
 #include <vector>
-#define LABEL_NALE_TXT_PATH "/home/firefly/obj_dec/src/rknn_yolov5_demo/model/coco_80_labels_list.txt"
+#define LABEL_NALE_TXT_PATH "./src/rknn_yolov5_demo/model/coco_80_labels_list.txt"
 
 static char *labels[OBJ_CLASS_NUM];
 

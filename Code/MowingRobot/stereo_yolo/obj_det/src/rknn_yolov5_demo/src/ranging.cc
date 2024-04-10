@@ -236,8 +236,6 @@ void Ranging::getInfo(Mat &imgL, Mat &imgR, Mat &detBoxes, Mat &info)
             infoRow.copyTo(info.row(i));
         };
     }
-        //    cv::imshow("kk",imgR);
-        //     cv::waitKey(1);
 
 }
 
@@ -274,8 +272,6 @@ Ranging::Ranging(int index, int imgw, int imgh) : //初始化
 }
 
 
-
-
 std::vector<Mat> Ranging::get_range() 
 {
     
@@ -284,9 +280,7 @@ std::vector<Mat> Ranging::get_range()
     Mat frame, lframe, rframe;
     // vcapture.read(frame); //获取视频帧
     vcapture >> frame;
-    
-    // cv::imshow("frame",frame);
-    
+        
     if (!frame.empty())
     {
         int64 t = getTickCount();
@@ -304,59 +298,57 @@ std::vector<Mat> Ranging::get_range()
             std::cout<<"detect nothing"<<std::endl;
         }
 
-        // detction box transfor to our format
+        /// ---LRD_ TODO
         Mat detBoxes(detect_result_group.count, 5, CV_32F); //定义矩阵，存储目标检测内容，存储格式(x,y,x,y,conf,cls)
-        char text[256];
         int count = 0;
+        
+        drawDetecBox(lframe , rframe, detect_result_group , detBoxes, count);
 
-        for (int i = 0; i < detect_result_group.count; i++) //存储目标检测内容 (x,y,x,y,conf,cls)
+       
+        t = getTickCount() - t;
+        frameRateShow(rframe , t);
+        return std::vector<Mat>{rframe, detBoxes, info};
+    }
+    return std::vector<Mat>{empty};
+}
+
+void  Ranging::drawDetecBox(cv::Mat& l_frame , cv::Mat& r_frame , const detect_result_group_t& detect_result , cv::Mat& detBoxs_data , int& count)
+{
+    char text[256];
+    count = 0;
+
+    for (int i = 0; i < detect_result_group.count; i++) //存储目标检测内容 (x,y,x,y,conf,cls)
+    {
+        detect_result_t *det_result = &(detect_result_group.results[i]);
+
+        /// drawing rectango
+        if(strcmp(det_result->name, "person") == 0 || strcmp(det_result->name, "bottle") == 0|| strcmp(det_result->name, "cup") == 0)
+        // if(strcmp(det_result->name, "vase") == 0|| strcmp(det_result->name, "suitcase") == 0)
         {
-            detect_result_t *det_result = &(detect_result_group.results[i]);
-
-            // if(strcmp(det_result->name, "person") == 0 || strcmp(det_result->name, "bottle") == 0|| strcmp(det_result->name, "cup") == 0)
-            if(strcmp(det_result->name, "vase") == 0|| strcmp(det_result->name, "suitcase") == 0)
-            {
-                count++;
-                sprintf(text, "%s %.1f%%", det_result->name, det_result->prop * 100);
-                // printf("%s @ (%d %d %d %d) %f\n", det_result->name, det_result->box.left, det_result->box.top,
-                // det_result->box.right, det_result->box.bottom, det_result->prop);
+            sprintf(text, "%s %.1f%%", det_result->name, det_result->prop * 100);
+            int xmin = det_result->box.left;
+            int ymin = det_result->box.top;
+            int xmax = det_result->box.right;
+            int ymax = det_result->box.bottom;
                 
-                int xmin = det_result->box.left;
-                int ymin = det_result->box.top;
-                int xmax = det_result->box.right;
-                int ymax = det_result->box.bottom;
-                
-                rectangle(Rframe, cv::Point(xmin, ymin), cv::Point(xmax, ymax), cv::Scalar(256, 0, 0, 256), 3);
-                putText(Rframe, text, cv::Point(xmin, ymin + 12), cv::FONT_HERSHEY_SIMPLEX, 0.4, cv::Scalar(255, 255, 255));
-                
+            rectangle(r_frame, cv::Point(xmin, ymin), cv::Point(xmax, ymax), cv::Scalar(256, 0, 0, 256), 3);
+            putText(r_frame, text, cv::Point(xmin, ymin + 12), cv::FONT_HERSHEY_SIMPLEX, 0.4, cv::Scalar(255, 255, 255));        
                 // (x,y) (x,y) conf 
-                detBoxes.at<float>(count-1, 0) = xmin;
-                detBoxes.at<float>(count-1, 1) = ymin;
-                detBoxes.at<float>(count-1, 2) = xmax;
-                detBoxes.at<float>(count-1, 3) = ymax;
-                detBoxes.at<float>(count-1, 4) = det_result->prop;    
-                // detBoxes.at<float>(i, 0) = xmin;
-                // detBoxes.at<float>(i, 1) = ymin;
-                // detBoxes.at<float>(i, 2) = xmax;
-                // detBoxes.at<float>(i, 3) = ymax;
-                // detBoxes.at<float>(i, 4) = det_result->prop;   
-            }   
-            // 实验测试，过滤过大的误检框*/ 
-            //     float ratio = (xmax - xmin) * (ymax - ymin) / 308480.;
-            //     if (ratio > 0.7)
-            //     {
-            //         detBoxes.at<float>(i, 5) = -1;
-            //         continue;
-            //     }
-        }
-        Mat finalBoxes(detBoxes, Range(0, count), Range::all());
+            detBoxs_data.at<float>(count, 0) = xmin;
+            detBoxs_data.at<float>(count, 1) = ymin;
+            detBoxs_data.at<float>(count, 2) = xmax;
+            detBoxs_data.at<float>(count, 3) = ymax;
+            detBoxs_data.at<float>(count, 4) = det_result->prop;    
+            count++;
+        }   
+        
+        Mat finalBoxes(detBoxs_data, Range(0, count), Range::all());
         Mat info(count, 4, CV_32F); // 存储测距信息，存储格式：距离d，宽w，高h，角度α
         // Mat info(detect_result_group.count, 4, CV_32F); // 存储测距信息，存储格式：距离d，宽w，高h，角度α
+        /// drawing distance_info
         if (count)
-        // if (detect_result_group.count)
         {
-            getInfo(lframe, rframe, finalBoxes, info);
-            // getInfo(lframe, rframe, detBoxes, info);
+            getInfo(l_frame, r_frame, finalBoxes, info);
 
             for(int i=0; i<info.rows;i++)
             {
@@ -373,20 +365,22 @@ std::vector<Mat> Ranging::get_range()
                 char dc[50], wh[50];
                 sprintf(dc, "dis:%.2fcm ", median);
                 // sprintf(wh, "W: %.2fcm H: %.2fcm ", w1, h1);
-                putText(Rframe, dc, Point(x1, y2), cv::FONT_HERSHEY_SIMPLEX, 0.4, cv::Scalar(255, 255, 255));
+                putText(r_frame, dc, Point(x1, y2), cv::FONT_HERSHEY_SIMPLEX, 0.4, cv::Scalar(255, 255, 255));
                 // putText(Rframe, wh, Point(x1, y1), cv::FONT_HERSHEY_SIMPLEX, 0.4, cv::Scalar(255, 255, 255));
             }
         }
-        t = getTickCount() - t;
-        char fps[50];
-        sprintf(fps, "fps: %d", int(1 / (t / getTickFrequency())));
-        putText(Rframe, fps, Point(20, 20), FONT_HERSHEY_PLAIN, 1, Scalar(0, 0, 255), 1.5);
-           
-        cv::imshow("k",Rframe);
-        cv::waitKey(1);
-        return std::vector<Mat>{rframe, detBoxes, info};
     }
-    return std::vector<Mat>{empty};
+
 }
+
+void Ranging::frameRateShow(cv::Mat& current_frame , int64 time)
+{
+    char fps[50];
+    sprintf(fps, "fps: %d", int( getTickFrequency()/time ) );
+    putText(current_frame, fps, Point(20, 20), FONT_HERSHEY_PLAIN, 1, Scalar(0, 0, 255), 1.5);
+    cv::imshow("k",current_frame);
+    cv::waitKey(1);
+}
+
 
 

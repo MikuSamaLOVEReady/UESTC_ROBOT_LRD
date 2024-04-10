@@ -137,7 +137,7 @@ Detection::Detection()
     
   }
 
-detect_result_group_t Detection::outputParse(cv::Mat netInputImg)
+detect_result_group_t Detection::outputParse(cv::Mat& netInputImg)
 {
 
     orig_img = netInputImg.clone();

@@ -66,7 +66,8 @@ private:
     cv::Mat info;
     cv::Mat empty;
 
-  
+    void drawDetecBox(cv::Mat&  , cv::Mat&   , const detect_result_group_t&  , cv::Mat&  , int& );
+    inline void frameRateShow(cv::Mat&  , int64 );
 
 public:
     Ranging(){};
@@ -77,4 +78,6 @@ public:
     std::vector<int> muban(cv::Mat &left_image, cv::Mat &right_image, const int *coordinates);
     std::vector<cv::Mat> get_range();
     void horizon_estimate(cv::Mat& img, cv::Mat& bboxs,int k);
+
+
 };
